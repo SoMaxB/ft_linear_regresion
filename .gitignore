@@ -1,0 +1,18 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+env/
+.env
+
+# Generated model and visualizations
+model/theta.json
+bonus/output/
+
+# Local tooling
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.DS_Store
