@@ -8,8 +8,9 @@ the price of a car from its mileage.
 ## Status
 
 The repository is currently in the preparation phase. The subject, technical
-decisions, architecture, and implementation issues are defined; application
-code will be added issue by issue.
+decisions, architecture, and implementation issues are defined. The executable
+entry points and test command exist, but the regression implementation is not
+available yet.
 
 ## Planned interface
 
@@ -29,6 +30,13 @@ estimatePrice(km) = theta0 + theta1 * km
 - `docs/DECISIONS.md`: agreed technical decisions and rationale.
 - `docs/ARCHITECTURE.md`: planned structure and responsibilities.
 - `docs/ISSUE_PLAN.md`: implementation roadmap and acceptance criteria.
+
+## Development commands
+
+```bash
+make check
+make test
+```
 
 ## Constraints
 
