@@ -8,8 +8,8 @@ the price of a car from its mileage.
 ## Status
 
 The mathematical core currently includes the linear hypothesis, one gradient
-descent step, the standardized training loop, and JSON model persistence. The
-command-line train/predict flow is planned in the following issues.
+descent step, the standardized training loop, JSON model persistence, and the
+training command-line flow. Prediction is planned in the following issue.
 
 ## Planned interface
 
@@ -30,6 +30,7 @@ estimatePrice(km) = theta0 + theta1 * km
 - `docs/ARCHITECTURE.md`: planned structure and responsibilities.
 - `docs/TRAINING.md`: training-loop formulas, API, and review notes.
 - `docs/MODEL_IO.md`: model JSON contract and persistence behavior.
+- `docs/CLI.md`: command-line training behavior and error handling.
 - `src/model_io.py`: model JSON persistence and validation.
 - `docs/ISSUE_PLAN.md`: implementation roadmap and acceptance criteria.
 
@@ -39,6 +40,14 @@ estimatePrice(km) = theta0 + theta1 * km
 make check
 make test
 ```
+
+Train from the repository root with the default paths:
+
+```bash
+python3 train.py
+```
+
+Use `--data PATH` and `--model PATH` to override them.
 
 ## Constraints
 
