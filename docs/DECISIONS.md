@@ -37,6 +37,10 @@ The persisted parameters always belong to the original mileage scale. The
 prediction program therefore does not need to know how training was
 internally normalized.
 
+The persistence layer requires exactly the `theta0` and `theta1` fields and
+rejects non-numeric or non-finite values. Saving creates missing parent
+directories and replaces the destination atomically.
+
 ## D-004: Public hypothesis
 
 Both programs use the subject hypothesis:

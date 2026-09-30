@@ -63,7 +63,9 @@ history needed by the caller or by diagnostics.
 
 ### `src/model_io.py`
 
-Owns JSON serialization, model loading, and model-file errors.
+Owns JSON serialization, model loading, model-file errors, and creation of the
+model directory. It writes through a temporary file and atomic replacement so
+an interrupted save does not leave a partial JSON model.
 
 ### `src/validation.py`
 
