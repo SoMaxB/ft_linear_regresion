@@ -7,10 +7,9 @@ the price of a car from its mileage.
 
 ## Status
 
-The repository is currently in the preparation phase. The subject, technical
-decisions, architecture, and implementation issues are defined. The executable
-entry points and test command exist, but the regression implementation is not
-available yet.
+The mathematical core currently includes the linear hypothesis, one gradient
+descent step, and the standardized training loop. Model persistence and the
+command-line train/predict flow are planned in the following issues.
 
 ## Planned interface
 
@@ -29,6 +28,7 @@ estimatePrice(km) = theta0 + theta1 * km
 - `en.subject.pdf`: authoritative project subject.
 - `docs/DECISIONS.md`: agreed technical decisions and rationale.
 - `docs/ARCHITECTURE.md`: planned structure and responsibilities.
+- `docs/TRAINING.md`: training-loop formulas, API, and review notes.
 - `docs/ISSUE_PLAN.md`: implementation roadmap and acceptance criteria.
 
 ## Development commands

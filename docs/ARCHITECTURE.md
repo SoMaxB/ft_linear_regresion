@@ -56,8 +56,10 @@ Owns CSV parsing, header validation, numeric conversion, and dataset errors.
 
 ### `src/regression.py`
 
-Owns the hypothesis, normalization conversion, gradient calculation, and
-simultaneous parameter updates.
+Owns the hypothesis, normalization conversion, gradient calculation,
+simultaneous parameter updates, and the pure training loop. `train_model`
+returns original-scale parameters plus the normalization metadata and cost
+history needed by the caller or by diagnostics.
 
 ### `src/model_io.py`
 
@@ -82,3 +84,19 @@ dependency of Mandatory programs.
 Errors should be explicit and actionable. The programs must reject malformed
 CSV rows, non-numeric input, non-finite values, empty datasets, unreadable
 models, and datasets whose mileage has zero variance.
+
+## Training contract
+
+`train_model` starts both normalized parameters at zero. It computes the
+population mean and standard deviation of mileage, applies gradient descent to
+the normalized values, and records the cost before the first update and after
+each update. The cost is:
+
+```text
+J(theta) = 1 / (2 * m) * sum((estimatePrice(normalized_km) - price)^2)
+```
+
+The function does not read files or write the model. Those responsibilities
+remain in the application and persistence issues. A non-positive learning
+rate, invalid iteration count, zero mileage variance, or any non-finite
+intermediate/result is rejected with `ValueError`.
