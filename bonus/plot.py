@@ -13,6 +13,8 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.data import Dataset, DatasetError, load_dataset
+from src.model_io import ModelError, load_model
+from src.regression import estimate_price
 
 
 DEFAULT_OUTPUT = "bonus/output/dataset.svg"
@@ -32,13 +34,50 @@ def create_dataset_svg(
     height: int = HEIGHT,
 ) -> str:
     """Return an SVG scatter plot for a validated dataset."""
+    return _create_svg(dataset, width=width, height=height)
+
+
+def create_regression_svg(
+    dataset: Dataset,
+    theta0: float,
+    theta1: float,
+    *,
+    width: int = WIDTH,
+    height: int = HEIGHT,
+) -> str:
+    """Return a dataset plot with the original-scale regression line."""
+    return _create_svg(
+        dataset,
+        theta0=theta0,
+        theta1=theta1,
+        width=width,
+        height=height,
+    )
+
+
+def _create_svg(
+    dataset: Dataset,
+    *,
+    theta0: float | None = None,
+    theta1: float | None = None,
+    width: int = WIDTH,
+    height: int = HEIGHT,
+) -> str:
+    """Build the shared SVG layout, optionally including a model line."""
     if width <= MARGIN_LEFT + MARGIN_RIGHT:
         raise ValueError("SVG width is too small for the plot margins")
     if height <= MARGIN_TOP + MARGIN_BOTTOM:
         raise ValueError("SVG height is too small for the plot margins")
 
     x_min, x_max = _expanded_range(dataset.mileage)
-    y_min, y_max = _expanded_range(dataset.prices)
+    prices = dataset.prices
+    if theta0 is not None and theta1 is not None:
+        prices = (
+            *prices,
+            estimate_price(theta0, theta1, x_min),
+            estimate_price(theta0, theta1, x_max),
+        )
+    y_min, y_max = _expanded_range(prices)
     plot_width = width - MARGIN_LEFT - MARGIN_RIGHT
     plot_height = height - MARGIN_TOP - MARGIN_BOTTOM
     x_axis = height - MARGIN_BOTTOM
@@ -84,17 +123,28 @@ def create_dataset_svg(
         )
     )
 
+    if theta0 is not None and theta1 is not None:
+        elements.append(
+            f'<line x1="{x_position(x_min):.2f}" '
+            f'y1="{y_position(estimate_price(theta0, theta1, x_min)):.2f}" '
+            f'x2="{x_position(x_max):.2f}" '
+            f'y2="{y_position(estimate_price(theta0, theta1, x_max)):.2f}" '
+            'stroke="#dc2626" stroke-width="3"/>'
+        )
+
     for mileage, price in zip(dataset.mileage, dataset.prices):
         elements.append(
             f'<circle cx="{x_position(mileage):.2f}" cy="{y_position(price):.2f}" '
             'r="5" fill="#2563eb"/>'
         )
 
+    title = "Mileage and price dataset"
+    if theta0 is not None:
+        title += " with regression line"
     elements.extend(
         (
             f'<text x="{width / 2:.2f}" y="28" text-anchor="middle" '
-            'font-size="20" font-weight="bold" fill="#111827">'
-            'Mileage and price dataset</text>',
+            f'font-size="20" font-weight="bold" fill="#111827">{title}</text>',
             f'<text x="{width / 2:.2f}" y="{height - 18}" text-anchor="middle" '
             'font-size="14" fill="#111827">Mileage (km)</text>',
             f'<text x="18" y="{height / 2:.2f}" text-anchor="middle" '
@@ -110,11 +160,22 @@ def create_dataset_svg(
     )
 
 
-def write_dataset_svg(dataset: Dataset, output_path: str | Path) -> None:
+def write_dataset_svg(
+    dataset: Dataset,
+    output_path: str | Path,
+    theta0: float | None = None,
+    theta1: float | None = None,
+) -> None:
     """Write a dataset SVG, creating its parent directory when needed."""
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(create_dataset_svg(dataset), encoding="utf-8")
+    if (theta0 is None) != (theta1 is None):
+        raise ValueError("theta0 and theta1 must be provided together")
+    if theta0 is None:
+        svg = create_dataset_svg(dataset)
+    else:
+        svg = create_regression_svg(dataset, theta0, theta1)
+    path.write_text(svg, encoding="utf-8")
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -124,8 +185,11 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     try:
         dataset = load_dataset(arguments.data)
-        write_dataset_svg(dataset, arguments.output)
-    except (DatasetError, OSError, ValueError) as error:
+        theta0 = theta1 = None
+        if arguments.model is not None:
+            theta0, theta1 = load_model(arguments.model)
+        write_dataset_svg(dataset, arguments.output, theta0, theta1)
+    except (DatasetError, ModelError, OSError, ValueError) as error:
         print(f"Error: {error}", file=sys.stderr)
         return 1
 
@@ -146,6 +210,10 @@ def _build_parser() -> argparse.ArgumentParser:
         "--output",
         default=DEFAULT_OUTPUT,
         help=f"SVG output path (default: {DEFAULT_OUTPUT})",
+    )
+    parser.add_argument(
+        "--model",
+        help="Persisted model path; adds the regression line when provided",
     )
     return parser
 

@@ -72,6 +72,15 @@ The default output is `bonus/output/dataset.svg`. Open that file in a browser or
 any SVG-capable image viewer. Custom paths can be supplied with `--data` and
 `--output`.
 
+Add a persisted Mandatory model to draw its regression line on the same plot:
+
+```bash
+python3 bonus/plot.py --model model/theta.json
+```
+
+The model parameters are already stored on the original mileage scale, so the
+plot uses the public hypothesis directly and does not need normalization data.
+
 ## Constraints
 
 The regression algorithm must be implemented by us. Libraries that perform
