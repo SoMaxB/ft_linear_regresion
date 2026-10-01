@@ -21,7 +21,7 @@ its acceptance criteria before the next dependent issue starts.
 - `#8` Implement `train.py`.
 - `#9` Implement `predict.py` (implemented).
 - `#10` Add mathematical unit tests (implemented).
-- `#11` Add train-to-predict integration tests.
+- `#11` Add train-to-predict integration tests (implemented).
 - `#12` Perform the Mandatory subject audit.
 
 ## Bonus

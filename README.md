@@ -29,6 +29,7 @@ estimatePrice(km) = theta0 + theta1 * km
 - `docs/DECISIONS.md`: agreed technical decisions and rationale.
 - `docs/ARCHITECTURE.md`: planned structure and responsibilities.
 - `docs/TRAINING.md`: training-loop formulas, API, and review notes.
+- `docs/TESTING.md`: unit, application, and integration test coverage.
 - `docs/MODEL_IO.md`: model JSON contract and persistence behavior.
 - `docs/CLI.md`: command-line training behavior and error handling.
 - `src/model_io.py`: model JSON persistence and validation.
