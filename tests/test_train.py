@@ -1,5 +1,6 @@
 import contextlib
 import io
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -39,6 +40,61 @@ class TrainingApplicationTest(unittest.TestCase):
         self.assertEqual(exit_code, 1)
         self.assertIn("Error: Dataset not found", error_output.getvalue())
         self.assertNotIn("Traceback", error_output.getvalue())
+
+    def test_optional_training_controls_and_diagnostics(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            data_path = root / "data.csv"
+            model_path = root / "theta.json"
+            diagnostics_path = root / "diagnostics" / "training.json"
+            data_path.write_text(self.DATA, encoding="utf-8")
+            output = io.StringIO()
+
+            with contextlib.redirect_stdout(output):
+                exit_code = train.main(
+                    [
+                        "--data",
+                        str(data_path),
+                        "--model",
+                        str(model_path),
+                        "--learning-rate",
+                        "0.05",
+                        "--iterations",
+                        "20",
+                        "--progress",
+                        "--diagnostics",
+                        str(diagnostics_path),
+                    ]
+                )
+
+            payload = json.loads(diagnostics_path.read_text(encoding="utf-8"))
+            output_lines = output.getvalue().splitlines()
+            self.assertEqual(exit_code, 0)
+            self.assertEqual(payload["learning_rate"], 0.05)
+            self.assertEqual(payload["iterations"], 20)
+            self.assertEqual(len(payload["cost_history"]), 21)
+            self.assertTrue(any("Iteration 0/20" in line for line in output_lines))
+            self.assertTrue(any("Iteration 20/20" in line for line in output_lines))
+            self.assertIn("Model trained and saved", output.getvalue())
+
+    def test_default_training_output_does_not_include_progress(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            data_path = root / "data.csv"
+            model_path = root / "theta.json"
+            data_path.write_text(self.DATA, encoding="utf-8")
+            output = io.StringIO()
+
+            with contextlib.redirect_stdout(output):
+                exit_code = train.main(
+                    ["--data", str(data_path), "--model", str(model_path)]
+                )
+
+            self.assertEqual(exit_code, 0)
+            self.assertEqual(
+                output.getvalue(),
+                f"Model trained and saved to {model_path}\n",
+            )
 
 
 if __name__ == "__main__":

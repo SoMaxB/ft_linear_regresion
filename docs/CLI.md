@@ -22,9 +22,14 @@ Paths can be overridden for local experiments or tests:
 python3 train.py --data path/to/data.csv --model path/to/theta.json
 ```
 
-The CLI does not expose learning-rate or iteration controls yet. Optional
-training diagnostics belong to a later issue so the Mandatory flow remains
-small and deterministic.
+The default command remains small and deterministic. Optional controls can be
+used when experimenting with the training behavior:
+
+```bash
+python3 train.py --learning-rate 0.05 --iterations 2500
+```
+
+The defaults remain `--learning-rate 0.1` and `--iterations 1000`.
 
 ## Errors
 
@@ -133,3 +138,21 @@ Both metrics are `0` for perfect predictions. Lower values indicate a better
 fit. They are error measurements, not classification accuracy percentages.
 The tool uses the persisted original-scale parameters and the public
 `estimatePrice(km)` hypothesis. It does not retrain or modify the model.
+
+## Bonus training diagnostics
+
+Training can optionally print cost checkpoints and export its diagnostics:
+
+```bash
+python3 train.py \
+  --learning-rate 0.05 \
+  --iterations 2500 \
+  --progress \
+  --diagnostics bonus/output/training.json
+```
+
+`--progress` prints evenly spaced checkpoints from the returned cost history.
+It does not change the gradient descent algorithm. `--diagnostics` writes a
+separate JSON document containing the configuration, original-scale and
+normalized parameters, mileage normalization metadata, and complete cost
+history. The Mandatory `model/theta.json` contract remains unchanged.

@@ -28,7 +28,8 @@ src/data.py ----> src/regression.py ----> src/model_io.py
 │   ├── data.py
 │   ├── model_io.py
 │   ├── regression.py
-│   └── validation.py
+│   ├── validation.py
+│   └── diagnostics.py
 ├── tests/
 │   ├── test_data.py
 │   ├── test_predict.py
@@ -70,6 +71,12 @@ an interrupted save does not leave a partial JSON model.
 ### `src/validation.py`
 
 Owns reusable checks for finite numeric values and user input.
+
+### `src/diagnostics.py`
+
+Owns optional training-diagnostics JSON serialization. It does not participate
+in model loading or prediction, and writes diagnostics atomically to a separate
+path.
 
 ### `tests/`
 

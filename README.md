@@ -91,6 +91,16 @@ It reports MAE, the average absolute error in price units, and MSE, the average
 squared error in squared price units. Lower values are better; neither metric
 is a percentage of correct predictions.
 
+Training controls and diagnostics are optional:
+
+```bash
+python3 train.py --learning-rate 0.05 --iterations 2500 --progress \
+  --diagnostics bonus/output/training.json
+```
+
+Without these options, the Mandatory training command and model format are
+unchanged.
+
 ## Constraints
 
 The regression algorithm must be implemented by us. Libraries that perform

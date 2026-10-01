@@ -107,3 +107,11 @@ MSE = 1 / m * sum((estimatePrice(km) - price)^2)
 
 Both metrics use the persisted original-scale parameters and do not alter the
 Mandatory training algorithm. Lower values are better and zero is perfect.
+
+## D-010: Optional training diagnostics
+
+Training controls and diagnostics are opt-in. The default learning rate,
+iteration count, output model path, output text, and model JSON schema remain
+unchanged for the Mandatory command. Progress is derived from the existing
+`cost_history`; diagnostic JSON is written separately from `model/theta.json`
+so prediction never depends on optional metadata.

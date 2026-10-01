@@ -73,3 +73,17 @@ also rejected immediately instead of being persisted or returned.
 - invalid and numerically unstable learning rates and iteration counts are
   rejected;
 - returned parameters and the complete cost history remain finite.
+
+## Optional diagnostics
+
+`train.py` exposes the training configuration without changing its defaults:
+
+```bash
+python3 train.py --learning-rate 0.05 --iterations 2500
+```
+
+The `--progress` flag prints evenly spaced checkpoints from `cost_history`.
+The `--diagnostics PATH` option exports the configuration, both original- and
+normalized-scale parameters, normalization metadata, initial and final costs,
+and the complete cost history to a separate JSON file. The diagnostics file
+is written atomically and is never used by `predict.py`.

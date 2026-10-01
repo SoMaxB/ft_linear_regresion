@@ -25,6 +25,8 @@ make test
   predict.py` with several mileages and a controlled dataset.
 - `tests/test_precision.py` checks MAE and MSE against manually calculated
   values, perfect predictions, invalid inputs, model loading, and CLI errors.
+- `tests/test_diagnostics.py` checks atomic diagnostics serialization, cost
+  history metadata, and invalid history lengths.
 
 The integration tests also verify that prediction fails explicitly before a
 model has been trained and does not request mileage input in that case.
