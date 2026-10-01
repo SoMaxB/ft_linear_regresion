@@ -61,3 +61,47 @@ Successful output has the form `Estimated price: VALUE` and exits with status
 message to standard error and exits with status `1`. A missing, unreadable, or
 invalid model is also an explicit error and never falls back to zero
 parameters.
+
+## Bonus dataset plot
+
+The first Bonus tool plots the `km,price` observations without adding an
+external dependency. It generates SVG directly with the Python standard
+library, which keeps it usable on clusters where installing packages is not
+available:
+
+```bash
+python3 bonus/plot.py
+```
+
+The default input is `data.csv` and the default output is
+`bonus/output/dataset.svg`. Both paths can be overridden:
+
+```bash
+python3 bonus/plot.py --data path/to/data.csv --output path/to/dataset.svg
+```
+
+## Bonus regression line
+
+The same tool can load the persisted Mandatory model and draw its regression
+line over the observations:
+
+```bash
+python3 bonus/plot.py --model model/theta.json
+```
+
+The `--model` option is optional. Without it, the tool only draws the dataset,
+which preserves the behavior of issue #13. When provided, the model is loaded
+through `src.model_io.load_model`, so missing, malformed, or non-finite models
+produce an explicit error instead of a misleading graph.
+
+Training may standardize mileage internally, but `train_model` converts the
+parameters back to the original scale before persistence. The plot therefore
+uses the same public hypothesis as prediction:
+
+```text
+estimatePrice(km) = theta0 + theta1 * km
+```
+
+The SVG y-axis includes both observed prices and the line's endpoint
+predictions, ensuring that the regression line remains visible even when it
+falls outside the observed price range.

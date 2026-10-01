@@ -26,8 +26,8 @@ its acceptance criteria before the next dependent issue starts.
 
 ## Bonus
 
-- `#13` Plot the dataset.
-- `#14` Plot the regression line with the dataset.
+- `#13` Plot the dataset (implemented).
+- `#14` Plot the regression line with the dataset (implemented).
 - `#15` Calculate model precision.
 - `#16` Improve optional CLI and training diagnostics.
 
