@@ -65,6 +65,11 @@ also rejected immediately instead of being persisted or returned.
 `tests/test_regression.py` verifies that:
 
 - training starts from zero and reduces the cost on a representative dataset;
+- the hypothesis works for a single point and two points recover a known line;
+- constant prices produce a zero slope and large mileage values remain finite;
 - normalized and original-scale hypotheses produce the same predictions;
-- zero mileage variance is rejected;
+- empty, single-point, mismatched, non-finite, and zero-variance data are
+  rejected;
+- invalid and numerically unstable learning rates and iteration counts are
+  rejected;
 - returned parameters and the complete cost history remain finite.
