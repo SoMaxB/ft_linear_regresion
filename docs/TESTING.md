@@ -9,9 +9,10 @@ do not depend on a previously trained `model/theta.json`.
 Run the complete verification suite from the repository root:
 
 ```bash
-make check
-make test
+make verify
 ```
+
+The individual commands remain available as `make check` and `make test`.
 
 ## Coverage
 

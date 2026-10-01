@@ -31,6 +31,9 @@ estimatePrice(km) = theta0 + theta1 * km
 - `docs/TRAINING.md`: training-loop formulas, API, and review notes.
 - `docs/TESTING.md`: unit, application, and integration test coverage.
 - `docs/AUDIT.md`: Mandatory subject compliance audit.
+- `mandatory_evaluation.md`: terminal command script for the peer evaluation.
+- `bonus_evaluation.md`: Bonus commands for visualization, precision, and diagnostics.
+- `docs/evaluation.html`: interactive single-page evaluation guide.
 - `docs/MODEL_IO.md`: model JSON contract and persistence behavior.
 - `docs/CLI.md`: command-line training behavior and error handling.
 - `src/model_io.py`: model JSON persistence and validation.
@@ -39,9 +42,30 @@ estimatePrice(km) = theta0 + theta1 * km
 ## Development commands
 
 ```bash
-make check
-make test
+make help    # Show all available commands
+make verify  # Compile and run the complete test suite
 ```
+
+The Makefile also provides shortcuts for the complete workflow:
+
+```bash
+make train
+make predict
+make plot
+make precision
+make diagnostics
+```
+
+Common values can be overridden without editing files:
+
+```bash
+make train DATA=data.csv MODEL=/tmp/theta.json \
+  LEARNING_RATE=0.05 ITERATIONS=2500
+```
+
+Run `make help` for the complete command list. Bonus evaluation steps are in
+`bonus_evaluation.md`; the Mandatory walkthrough is in
+`mandatory_evaluation.md`.
 
 Train from the repository root with the default paths:
 

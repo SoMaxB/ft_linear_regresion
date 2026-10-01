@@ -1,5 +1,8 @@
 # Command-Line Applications
 
+The Makefile provides shortcuts for the commands below. Run `make help` to
+see the available targets and configurable variables.
+
 Issue #8 connects the existing data, training, and persistence components in
 `train.py`. Issue #9 adds the interactive prediction flow in `predict.py`.
 Both commands are intentionally orchestrators; they do not contain the
@@ -31,6 +34,19 @@ python3 train.py --learning-rate 0.05 --iterations 2500
 
 The defaults remain `--learning-rate 0.1` and `--iterations 1000`.
 
+The equivalent Make target is:
+
+```bash
+make train
+```
+
+For custom values:
+
+```bash
+make train DATA=path/to/data.csv MODEL=path/to/theta.json \
+  LEARNING_RATE=0.05 ITERATIONS=2500
+```
+
 ## Errors
 
 Dataset, training, and model-file errors are printed as one concise `Error:`
@@ -60,6 +76,8 @@ The model path can be overridden:
 ```bash
 python3 predict.py --model path/to/theta.json
 ```
+
+The equivalent shortcut is `make predict MODEL=path/to/theta.json`.
 
 Successful output has the form `Estimated price: VALUE` and exits with status
 `0`. The mileage must be numeric and finite; invalid input prints an `Error:`
@@ -94,6 +112,9 @@ line over the observations:
 python3 bonus/plot.py --model model/theta.json
 ```
 
+The equivalent shortcut is `make plot`. It expects a model at the default
+path, so run `make train` first or provide `MODEL=...`.
+
 The `--model` option is optional. Without it, the tool only draws the dataset,
 which preserves the behavior of issue #13. When provided, the model is loaded
 through `src.model_io.load_model`, so missing, malformed, or non-finite models
@@ -127,6 +148,8 @@ python3 bonus/precision.py \
   --model path/to/theta.json
 ```
 
+The equivalent shortcut is `make precision MODEL=path/to/theta.json`.
+
 It prints two regression error metrics:
 
 - **MAE** (Mean Absolute Error) is the average absolute difference between the
@@ -156,3 +179,11 @@ It does not change the gradient descent algorithm. `--diagnostics` writes a
 separate JSON document containing the configuration, original-scale and
 normalized parameters, mileage normalization metadata, and complete cost
 history. The Mandatory `model/theta.json` contract remains unchanged.
+
+The equivalent shortcut is:
+
+```bash
+make diagnostics
+```
+
+Its output path can be overridden with `DIAGNOSTICS=path/to/training.json`.

@@ -62,6 +62,6 @@ make check
 make test
 ```
 
-They pass with 46 tests. The test suite covers the mathematical core, invalid
+They pass with 62 tests. The test suite covers the mathematical core, invalid
 inputs, model persistence, both applications, and the complete train-to-predict
 flow. Bonus work must remain blocked until this audit is accepted.

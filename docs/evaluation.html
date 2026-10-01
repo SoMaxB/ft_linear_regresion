@@ -1,0 +1,792 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101820">
+  <title>ft_linear_regression | Evaluation Guide</title>
+  <style>
+    :root {
+      --ink: #edf7f4;
+      --muted: #a8babe;
+      --paper: #0c1419;
+      --card: #17242b;
+      --line: #2c4148;
+      --navy: #091116;
+      --teal: #5ad7d0;
+      --teal-soft: #173f42;
+      --orange: #f8a44c;
+      --orange-soft: #4a3018;
+      --green: #62d49a;
+      --green-soft: #173d31;
+      --shadow: 0 18px 45px rgba(0, 0, 0, .28);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 90% 0%, rgba(242, 140, 40, .1), transparent 28rem),
+        radial-gradient(circle at 0% 28%, rgba(0, 174, 174, .1), transparent 25rem),
+        var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      line-height: 1.65;
+      font-size: 16px;
+    }
+
+    code, pre, .eyebrow, .metric-value, .tag, .command-label {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+
+    a { color: inherit; }
+
+    .shell {
+      display: grid;
+      grid-template-columns: 238px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 28px 20px;
+      color: #eaf3f1;
+      background: var(--navy);
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: flex;
+      gap: 11px;
+      align-items: center;
+      margin-bottom: 42px;
+      font-weight: 800;
+      letter-spacing: -.03em;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 35px;
+      height: 35px;
+      place-items: center;
+      color: var(--navy);
+      background: var(--orange);
+      border-radius: 11px;
+      font-weight: 900;
+    }
+
+    .brand small {
+      display: block;
+      margin-top: 2px;
+      color: #8fa5a9;
+      font-size: .66rem;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .language-toggle {
+      display: block;
+      margin: 0 0 28px 9px;
+      padding: 7px 10px;
+      color: #b8cecc;
+      background: transparent;
+      border: 1px solid #426068;
+      border-radius: 8px;
+      cursor: pointer;
+      font: 700 .7rem "SFMono-Regular", Consolas, monospace;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .language-toggle:hover { color: #fff; border-color: var(--orange); }
+
+    .nav-title {
+      margin: 0 0 11px 9px;
+      color: #758f94;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: .68rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .nav {
+      display: grid;
+      gap: 5px;
+    }
+
+    .nav a {
+      padding: 10px 11px;
+      color: #a8bec0;
+      border-radius: 10px;
+      font-size: .88rem;
+      text-decoration: none;
+      transition: .2s ease;
+    }
+
+    .nav a:hover, .nav a.active {
+      color: #fff;
+      background: rgba(255, 255, 255, .09);
+    }
+
+    .nav a.active { box-shadow: inset 3px 0 var(--orange); }
+
+    .sidebar-footer {
+      margin-top: 44px;
+      padding: 14px 10px;
+      color: #8fa5a9;
+      border-top: 1px solid rgba(255, 255, 255, .1);
+      font-size: .75rem;
+    }
+
+    main {
+      width: min(1180px, 100%);
+      padding: 38px clamp(22px, 5vw, 72px) 80px;
+    }
+
+    .hero {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 36px;
+      align-items: end;
+      min-height: 310px;
+      padding: clamp(28px, 5vw, 58px);
+      color: #f4fbf7;
+      background: var(--navy);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero::after {
+      position: absolute;
+      right: -80px;
+      bottom: -130px;
+      width: 420px;
+      height: 420px;
+      border: 1px solid rgba(255, 255, 255, .14);
+      border-radius: 50%;
+      box-shadow: 0 0 0 35px rgba(255, 255, 255, .03), 0 0 0 70px rgba(255, 255, 255, .025);
+      content: "";
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--orange);
+      font-size: .76rem;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      max-width: 650px;
+      margin-bottom: 18px;
+      font-size: clamp(2.5rem, 6vw, 5.3rem);
+      letter-spacing: -.075em;
+      line-height: .95;
+    }
+
+    .hero-copy {
+      max-width: 620px;
+      margin-bottom: 0;
+      color: #b8cecc;
+      font-size: 1.05rem;
+    }
+
+    .hero-side {
+      position: relative;
+      z-index: 1;
+      justify-self: end;
+      max-width: 290px;
+      padding: 19px;
+      background: rgba(255, 255, 255, .08);
+      border: 1px solid rgba(255, 255, 255, .12);
+      border-radius: 16px;
+    }
+
+    .hero-side strong { display: block; margin-bottom: 6px; color: #fff; }
+    .hero-side span { color: #a8bec0; font-size: .85rem; }
+
+    .section { scroll-margin-top: 25px; margin-top: 76px; }
+
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 22px;
+    }
+
+    .section-heading h2 { margin-bottom: 0; font-size: clamp(1.65rem, 3vw, 2.4rem); letter-spacing: -.055em; }
+    .section-heading p { max-width: 500px; margin-bottom: 0; color: var(--muted); font-size: .94rem; }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .quick-card, .panel, .command-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 8px 24px rgba(16, 24, 32, .035);
+    }
+
+    .quick-card {
+      min-height: 152px;
+      padding: 20px;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .quick-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+    .quick-card .tag { margin-bottom: 22px; }
+    .quick-card h3 { margin-bottom: 5px; font-size: 1.08rem; }
+    .quick-card p { margin-bottom: 0; color: var(--muted); font-size: .92rem; }
+
+    .tag {
+      display: inline-flex;
+      padding: 5px 8px;
+      color: var(--teal);
+      background: var(--teal-soft);
+      border-radius: 7px;
+      font-size: .66rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .tag.orange { color: #ffc078; background: var(--orange-soft); }
+    .tag.green { color: var(--green); background: var(--green-soft); }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+      align-items: stretch;
+    }
+
+    .flow-step {
+      position: relative;
+      min-height: 140px;
+      padding: 22px 20px;
+      background: var(--card);
+      border: 1px solid var(--line);
+    }
+
+    .flow-step:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+    .flow-step:last-child { border-radius: 0 var(--radius) var(--radius) 0; }
+    .flow-step:not(:last-child)::after {
+      position: absolute;
+      z-index: 2;
+      top: 50%;
+      right: -9px;
+      width: 17px;
+      height: 17px;
+      border-top: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      background: var(--card);
+      content: "";
+      transform: translateY(-50%) rotate(45deg);
+    }
+
+    .step-number { color: var(--orange); font-family: monospace; font-size: .72rem; font-weight: 800; }
+    .flow-step h3 { margin: 17px 0 4px; font-size: 1rem; }
+    .flow-step p { margin: 0; color: var(--muted); font-size: .88rem; }
+
+    .command-list { display: grid; gap: 12px; }
+
+    .command-card {
+      display: grid;
+      grid-template-columns: 145px minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+      padding: 16px 18px;
+    }
+
+    .command-label { color: var(--teal); font-size: .78rem; font-weight: 800; }
+    .command-description { margin: 0; color: var(--muted); font-size: .95rem; }
+
+    .command-code {
+      display: flex;
+      grid-column: 2 / 4;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-top: -4px;
+      padding: 10px 12px;
+      color: #d9eeeb;
+      background: var(--navy);
+      border-radius: 9px;
+      font-size: .76rem;
+      overflow-x: auto;
+    }
+
+    .copy {
+      flex: 0 0 auto;
+      padding: 6px 9px;
+      color: #b8cecc;
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, .2);
+      border-radius: 6px;
+      cursor: pointer;
+      font: inherit;
+      font-size: .68rem;
+    }
+
+    .copy:hover { color: #fff; border-color: var(--orange); }
+
+    .search {
+      width: 100%;
+      margin-bottom: 14px;
+      padding: 13px 15px;
+      color: var(--ink);
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font: inherit;
+      outline-color: var(--teal);
+    }
+
+    .table-wrap { overflow-x: auto; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); }
+    table { width: 100%; border-collapse: collapse; min-width: 680px; }
+    th, td { padding: 15px 18px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    tr:last-child td { border-bottom: 0; }
+    th { color: var(--muted); background: #1d2d34; font-size: .76rem; letter-spacing: .1em; text-transform: uppercase; }
+    td { font-size: .94rem; }
+    td:first-child { color: var(--teal); font-family: monospace; font-weight: 700; white-space: nowrap; }
+    td small { display: block; margin-top: 3px; color: var(--muted); font-family: inherit; font-weight: 400; }
+
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .panel { padding: 24px; }
+    .panel h3 { margin-bottom: 10px; font-size: 1.12rem; }
+    .panel p { color: var(--muted); font-size: .96rem; }
+    .formula { margin: 16px 0 0; padding: 14px 16px; color: #d9eeeb; background: var(--navy); border-radius: 10px; font-family: monospace; font-size: .84rem; overflow-x: auto; }
+
+    details { border-top: 1px solid var(--line); }
+    details:first-of-type { border-top: 0; }
+    summary { padding: 15px 0; cursor: pointer; font-weight: 750; list-style: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { float: right; color: var(--teal); content: "+"; font-family: monospace; font-size: 1.2rem; }
+    details[open] summary::after { content: "-"; }
+    details p { margin: 0 0 15px; font-size: .95rem; }
+
+    .checklist { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .check-card { padding: 23px; border-radius: var(--radius); }
+    .check-card.mandatory { background: var(--navy); color: #ecf7f4; }
+    .check-card.bonus { background: var(--orange-soft); }
+    .check-card h3 { margin-bottom: 15px; }
+    .check-card ul { display: grid; gap: 9px; margin: 0; padding: 0; list-style: none; }
+    .check-card li { position: relative; padding-left: 24px; font-size: .95rem; }
+    .check-card li::before { position: absolute; left: 0; color: var(--teal); content: "[ ]"; font-family: monospace; font-weight: 800; }
+    .mandatory li::before { color: var(--orange); }
+
+    footer { margin-top: 80px; padding-top: 20px; color: var(--muted); border-top: 1px solid var(--line); font-size: .78rem; }
+
+    @media (max-width: 980px) {
+      .shell { display: block; }
+      .sidebar { position: relative; height: auto; padding: 18px 22px; }
+      .brand { margin-bottom: 18px; }
+      .nav-title, .sidebar-footer { display: none; }
+      .nav { display: flex; gap: 4px; overflow-x: auto; }
+      .nav a { white-space: nowrap; }
+      main { padding-top: 25px; }
+      .quick-grid { grid-template-columns: repeat(2, 1fr); }
+      .flow { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .flow-step, .flow-step:first-child, .flow-step:last-child { border-radius: var(--radius); }
+      .flow-step:not(:last-child)::after { display: none; }
+    }
+
+    @media (max-width: 680px) {
+      main { padding: 18px 15px 55px; }
+      .hero { display: block; min-height: 0; padding: 30px 24px; border-radius: 20px; }
+      .hero-side { margin-top: 30px; }
+      .section { margin-top: 52px; }
+      .section-heading { display: block; }
+      .section-heading p { margin-top: 8px; }
+      .quick-grid, .split, .checklist { grid-template-columns: 1fr; }
+      .flow { grid-template-columns: 1fr; }
+      .command-card { grid-template-columns: 1fr auto; gap: 7px 12px; }
+      .command-label { grid-column: 1; }
+      .command-description { grid-column: 1 / 3; grid-row: 2; }
+      .command-code { grid-column: 1 / 3; grid-row: 3; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark">42</span>
+        <span>linear regression<small>evaluation guide</small></span>
+      </div>
+      <button class="language-toggle" id="language-toggle" type="button" aria-label="Switch to Spanish">ES / Español</button>
+      <p class="nav-title">Navigate</p>
+      <nav class="nav" aria-label="Page sections">
+        <a class="active" href="#overview">Overview</a>
+        <a href="#workflow">Workflow</a>
+        <a href="#commands">Make commands</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#math">Math decisions</a>
+        <a href="#checklist">Checklist</a>
+      </nav>
+      <div class="sidebar-footer">Offline-first. No external assets.<br>Built for a calm peer evaluation.</div>
+    </aside>
+
+    <main>
+      <header class="hero" id="overview">
+        <div>
+          <p class="eyebrow">ft_linear_regression / field guide</p>
+          <h1>Explain the project.<br>Run the proof.</h1>
+          <p class="hero-copy">A compact visual map of the Mandatory implementation, the Bonus tools, the math behind them, and the commands that demonstrate everything.</p>
+        </div>
+        <div class="hero-side">
+          <strong>Evaluation principle</strong>
+          <span>Start with the contract, follow the data, then prove the behavior with commands and tests.</span>
+        </div>
+      </header>
+
+      <section class="section" aria-labelledby="quick-title">
+        <div class="section-heading">
+          <div><p class="eyebrow">01 / start here</p><h2 id="quick-title">Four useful commands</h2></div>
+          <p>These are the shortcuts you are most likely to use during development or the peer evaluation.</p>
+        </div>
+        <div class="quick-grid">
+          <article class="quick-card"><span class="tag">quality</span><h3>make verify</h3><p>Compile every Python source and run all 62 tests.</p></article>
+          <article class="quick-card"><span class="tag orange">mandatory</span><h3>make train</h3><p>Train with defaults and save original-scale parameters.</p></article>
+          <article class="quick-card"><span class="tag">bonus</span><h3>make plot</h3><p>Generate an offline SVG with data points and the line.</p></article>
+          <article class="quick-card"><span class="tag green">inspect</span><h3>make diagnostics</h3><p>Show cost checkpoints and export the training history.</p></article>
+        </div>
+      </section>
+
+      <section class="section" id="workflow" aria-labelledby="workflow-title">
+        <div class="section-heading">
+          <div><p class="eyebrow">02 / follow the data</p><h2 id="workflow-title">One feature, one clear path</h2></div>
+          <p>The same original-scale model powers prediction, visualization, and precision metrics.</p>
+        </div>
+        <div class="flow">
+          <article class="flow-step"><span class="step-number">01</span><h3>data.csv</h3><p>Validated km and price observations.</p></article>
+          <article class="flow-step"><span class="step-number">02</span><h3>load_dataset</h3><p>CSV contract and finite values.</p></article>
+          <article class="flow-step"><span class="step-number">03</span><h3>train_model</h3><p>Normalize, descend, convert back.</p></article>
+          <article class="flow-step"><span class="step-number">04</span><h3>theta.json</h3><p>Only theta0 and theta1 persist.</p></article>
+          <article class="flow-step"><span class="step-number">05</span><h3>tools</h3><p>Predict, plot, measure, explain.</p></article>
+        </div>
+      </section>
+
+      <section class="section" id="commands" aria-labelledby="commands-title">
+        <div class="section-heading">
+          <div><p class="eyebrow">03 / the cheat sheet</p><h2 id="commands-title">Make commands, decoded</h2></div>
+          <p>Search the table by target, output, or concept. Every command is safe to copy.</p>
+        </div>
+        <input class="search" id="command-search" type="search" placeholder="Filter commands..." aria-label="Filter commands">
+        <div class="command-list" id="command-list">
+          <article class="command-card" data-search="help usage targets makefile cheat sheet">
+            <span class="command-label">make help</span><p class="command-description">Print the available targets without running the project.</p>
+            <div class="command-code"><code>make help</code><button class="copy" data-copy="make help">Copy</button></div>
+          </article>
+          <article class="command-card" data-search="check compile python syntax">
+            <span class="command-label">make check</span><p class="command-description">Compile all project, test, and Bonus Python files.</p>
+            <div class="command-code"><code>make check</code><button class="copy" data-copy="make check">Copy</button></div>
+          </article>
+          <article class="command-card" data-search="test unittest suite quality">
+            <span class="command-label">make test</span><p class="command-description">Run the complete unit and integration test suite.</p>
+            <div class="command-code"><code>make test</code><button class="copy" data-copy="make test">Copy</button></div>
+          </article>
+          <article class="command-card" data-search="verify check test quality">
+            <span class="command-label">make verify</span><p class="command-description">Run compilation and tests in one command.</p>
+            <div class="command-code"><code>make verify</code><button class="copy" data-copy="make verify">Copy</button></div>
+          </article>
+          <article class="command-card" data-search="train mandatory model theta learning iterations">
+            <span class="command-label">make train</span><p class="command-description">Train the model with configurable paths and defaults.</p>
+            <div class="command-code"><code>make train LEARNING_RATE=0.05 ITERATIONS=2500</code><button class="copy" data-copy="make train LEARNING_RATE=0.05 ITERATIONS=2500">Copy</button></div>
+          </article>
+          <article class="command-card" data-search="predict mandatory price input">
+            <span class="command-label">make predict</span><p class="command-description">Load theta.json and ask for one mileage.</p>
+            <div class="command-code"><code>make predict</code><button class="copy" data-copy="make predict">Copy</button></div>
+          </article>
+          <article class="command-card" data-search="plot bonus svg visualization line">
+            <span class="command-label">make plot</span><p class="command-description">Create the dependency-free SVG dataset plot and regression line.</p>
+            <div class="command-code"><code>make train &amp;&amp; make plot</code><button class="copy" data-copy="make train && make plot">Copy</button></div>
+          </article>
+          <article class="command-card" data-search="precision bonus mae mse metrics error">
+            <span class="command-label">make precision</span><p class="command-description">Measure predictions against the dataset with MAE and MSE.</p>
+            <div class="command-code"><code>make precision</code><button class="copy" data-copy="make precision">Copy</button></div>
+          </article>
+          <article class="command-card" data-search="diagnostics bonus cost history progress json">
+            <span class="command-label">make diagnostics</span><p class="command-description">Train, print cost checkpoints, and export training.json.</p>
+            <div class="command-code"><code>make diagnostics</code><button class="copy" data-copy="make diagnostics">Copy</button></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="architecture" aria-labelledby="architecture-title">
+        <div class="section-heading">
+          <div><p class="eyebrow">04 / know your map</p><h2 id="architecture-title">Functions and responsibilities</h2></div>
+          <p>Search by function, file, or responsibility to find the right explanation during evaluation.</p>
+        </div>
+        <input class="search" id="function-search" type="search" placeholder="Filter functions..." aria-label="Filter functions">
+        <div class="table-wrap">
+          <table id="function-table">
+            <thead><tr><th>Symbol</th><th>Location</th><th>What it proves</th></tr></thead>
+            <tbody>
+              <tr data-search="load_dataset data csv validation"><td>load_dataset</td><td>src/data.py</td><td>Owns CSV parsing, header validation, numeric conversion, and dataset errors.</td></tr>
+              <tr data-search="estimate_price hypothesis prediction math"><td>estimate_price</td><td>src/regression.py</td><td>Evaluates the public hypothesis: <code>theta0 + theta1 * km</code>.</td></tr>
+              <tr data-search="gradient_descent_step gradient math update"><td>gradient_descent_step</td><td>src/regression.py</td><td>Calculates both subject gradients before applying a simultaneous update.</td></tr>
+              <tr data-search="train_model training normalization cost"><td>train_model</td><td>src/regression.py</td><td>Standardizes mileage, trains, records cost, and converts parameters back.</td></tr>
+              <tr data-search="save_model load_model persistence json atomic"><td>save_model / load_model</td><td>src/model_io.py</td><td>Protects the exact two-field model contract with atomic writes and validation.</td></tr>
+              <tr data-search="save_training_diagnostics bonus cost json"><td>save_training_diagnostics</td><td>src/diagnostics.py</td><td>Stores optional configuration, normalization metadata, and cost history separately.</td></tr>
+              <tr data-search="calculate_mae calculate_mse bonus precision error"><td>calculate_mae / calculate_mse</td><td>bonus/precision.py</td><td>Measures model quality without modifying Mandatory training.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section" id="math" aria-labelledby="math-title">
+        <div class="section-heading">
+          <div><p class="eyebrow">05 / explain the why</p><h2 id="math-title">Decisions worth remembering</h2></div>
+          <p>These are the short answers to the questions most likely to come up in a review.</p>
+        </div>
+        <div class="split">
+          <div class="panel">
+            <details open><summary>Why standardize mileage?</summary><p>Raw mileages are large numbers. Standardization keeps gradient descent numerically stable, then the parameters are converted back before persistence.</p><pre class="formula">normalized_km = (km - mean_km) / std_km</pre></details>
+            <details><summary>What does the public model store?</summary><p>Only the original-scale parameters are persisted. Prediction does not need to know that training used normalization internally.</p><pre class="formula">estimatePrice(km) = theta0 + theta1 * km</pre></details>
+            <details><summary>Why MAE and MSE?</summary><p>MAE is easy to interpret in price units. MSE penalizes large errors more heavily. Lower is better; zero is perfect.</p><pre class="formula">MAE = mean(abs(prediction - actual))
+MSE = mean((prediction - actual)^2)</pre></details>
+          </div>
+          <div class="panel">
+            <details open><summary>What does diagnostics measure?</summary><p>It exposes the already-recorded training cost over time, plus configuration and normalization metadata. It does not change the gradient descent loop.</p><pre class="formula">cost_history[0] = initial cost
+cost_history[-1] = final cost</pre></details>
+            <details><summary>Why keep Bonus separate?</summary><p>The Mandatory programs stay small and dependency-free. SVG, precision, and diagnostics consume the public model but never become requirements for training or prediction.</p></details>
+            <details><summary>What is checked for invalid input?</summary><p>Missing files, malformed CSV rows, non-numeric or non-finite values, invalid model JSON, zero mileage variance, and unstable training parameters are rejected explicitly.</p></details>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="checklist" aria-labelledby="checklist-title">
+        <div class="section-heading">
+          <div><p class="eyebrow">06 / finish strong</p><h2 id="checklist-title">Evaluation checklist</h2></div>
+          <p>Use this as a final mental checklist. The detailed command scripts live in the repository.</p>
+        </div>
+        <div class="checklist">
+          <div class="check-card mandatory">
+            <h3>Mandatory</h3>
+            <ul>
+              <li data-en="Show make verify passing." data-es="Comprobar que make verify pasa correctamente.">Show <code>make verify</code> passing.</li>
+              <li data-en="Explain the public hypothesis." data-es="Explicar la hipotesis publica.">Explain the public hypothesis.</li>
+              <li data-en="Show simultaneous gradient updates." data-es="Mostrar las actualizaciones simultaneas del gradiente.">Show simultaneous gradient updates.</li>
+              <li data-en="Explain internal normalization and conversion." data-es="Explicar la normalizacion interna y la conversion.">Explain internal normalization and conversion.</li>
+              <li data-en="Train, inspect theta.json, and predict." data-es="Entrenar, inspeccionar theta.json y predecir.">Train, inspect theta.json, and predict.</li>
+              <li data-en="Demonstrate validation errors." data-es="Demostrar los errores de validacion.">Demonstrate validation errors.</li>
+            </ul>
+          </div>
+          <div class="check-card bonus">
+            <h3>Bonus</h3>
+            <ul>
+              <li data-en="Generate and open the SVG plot." data-es="Generar y abrir el grafico SVG.">Generate and open the SVG plot.</li>
+              <li data-en="Point out the original-scale regression line." data-es="Senalar la recta de regresion en escala original.">Point out the original-scale regression line.</li>
+              <li data-en="Run MAE and MSE." data-es="Ejecutar MAE y MSE.">Run MAE and MSE.</li>
+              <li data-en="Export diagnostics and inspect cost history." data-es="Exportar los diagnosticos e inspeccionar el historial de coste.">Export diagnostics and inspect cost history.</li>
+              <li data-en="Explain that no external packages are required." data-es="Explicar que no hacen falta paquetes externos.">Explain that no external packages are required.</li>
+              <li data-en="Keep Bonus tools independent from Mandatory." data-es="Mantener las herramientas Bonus independientes del Mandatory.">Keep Bonus tools independent from Mandatory.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <footer>Offline evaluation guide · Source of detail: <code>docs/</code>, <code>mandatory_evaluation.md</code>, and <code>bonus_evaluation.md</code>.</footer>
+  </main>
+  </div>
+
+  <script>
+    (function () {
+      const translations = {
+        "linear regression": "regresión lineal",
+        "evaluation guide": "guía de evaluación",
+        "Navigate": "Navegación",
+        "Overview": "Resumen",
+        "Workflow": "Flujo",
+        "Make commands": "Comandos Make",
+        "Architecture": "Arquitectura",
+        "Math decisions": "Decisiones matematicas",
+        "Checklist": "Checklist",
+        "Offline-first. No external assets.": "Sin conexion. Sin recursos externos.",
+        "Built for a calm peer evaluation.": "Pensada para una evaluacion tranquila.",
+        "field guide": "guía de campo",
+        "Explain the project.": "Explica el proyecto.",
+        "Run the proof.": "Demuestra que funciona.",
+        "A compact visual map of the Mandatory implementation, the Bonus tools, the math behind them, and the commands that demonstrate everything.": "Un mapa visual de la implementación Mandatory, las herramientas Bonus, las matemáticas y los comandos que demuestran todo.",
+        "Evaluation principle": "Principio de evaluación",
+        "Start with the contract, follow the data, then prove the behavior with commands and tests.": "Empieza por el contrato, sigue los datos y demuestra el comportamiento con comandos y tests.",
+        "01 / start here": "01 / empieza aquí",
+        "Four useful commands": "Cuatro comandos útiles",
+        "These are the shortcuts you are most likely to use during development or the peer evaluation.": "Estos son los atajos que más usarás durante el desarrollo o la evaluación.",
+        "quality": "calidad",
+        "mandatory": "mandatory",
+        "bonus": "bonus",
+        "inspect": "inspeccion",
+        "Train with defaults and save original-scale parameters.": "Entrena con los valores por defecto y guarda parámetros en escala original.",
+        "Compile every Python source and run all 62 tests.": "Compila todos los fuentes Python y ejecuta los 62 tests.",
+        "Generate an offline SVG with data points and the line.": "Genera un SVG offline con los datos y la recta.",
+        "Show cost checkpoints and export the training history.": "Muestra checkpoints del coste y exporta el historial.",
+        "02 / follow the data": "02 / sigue los datos",
+        "One feature, one clear path": "Una variable, un camino claro",
+        "The same original-scale model powers prediction, visualization, and precision metrics.": "El mismo modelo en escala original alimenta la predicción, la visualización y las métricas.",
+        "Validated km and price observations.": "Observaciones km y price validadas.",
+        "CSV contract and finite values.": "Contrato CSV y valores finitos.",
+        "Normalize, descend, convert back.": "Normaliza, desciende y convierte.",
+        "Only theta0 and theta1 persist.": "Solo persisten theta0 y theta1.",
+        "Predict, plot, measure, explain.": "Predice, dibuja, mide y explica.",
+        "03 / the cheat sheet": "03 / la chuleta",
+        "Make commands, decoded": "Comandos Make, explicados",
+        "Search the table by target, output, or concept. Every command is safe to copy.": "Busca por target, salida o concepto. Todos los comandos se pueden copiar.",
+        "Show available commands": "Muestra los comandos disponibles",
+        "Print the available targets without running the project.": "Imprime los targets disponibles sin ejecutar el proyecto.",
+        "Compile all project, test, and Bonus Python files.": "Compila todos los ficheros Python del proyecto, tests y Bonus.",
+        "Run the complete unit and integration test suite.": "Ejecuta toda la suite de tests unitarios e integracion.",
+        "Run compilation and tests in one command.": "Ejecuta compilacion y tests en un solo comando.",
+        "Train the model with configurable paths and defaults.": "Entrena el modelo con rutas y valores configurables.",
+        "Load theta.json and ask for one mileage.": "Carga theta.json y pide un kilometraje.",
+        "Create the dependency-free SVG dataset plot and regression line.": "Crea el SVG sin dependencias con datos y recta de regresion.",
+        "Measure predictions against the dataset with MAE and MSE.": "Mide las predicciones frente al dataset con MAE y MSE.",
+        "Train, print cost checkpoints, and export training.json.": "Entrena, muestra checkpoints del coste y exporta training.json.",
+        "04 / know your map": "04 / conoce el mapa",
+        "Functions and responsibilities": "Funciones y responsabilidades",
+        "Search by function, file, or responsibility to find the right explanation during evaluation.": "Busca por función, fichero o responsabilidad para encontrar la explicación correcta.",
+        "Symbol": "Simbolo",
+        "Location": "Ubicacion",
+        "What it proves": "Que demuestra",
+        "Owns CSV parsing, header validation, numeric conversion, and dataset errors.": "Gestiona el CSV, la cabecera, la conversion numerica y los errores del dataset.",
+        "Evaluates the public hypothesis:": "Evalúa la hipótesis pública:",
+        "Calculates both subject gradients before applying a simultaneous update.": "Calcula ambos gradientes del subject antes de aplicar una actualizacion simultanea.",
+        "Standardizes mileage, trains, records cost, and converts parameters back.": "Estandariza el kilometraje, entrena, registra el coste y reconvierte los parametros.",
+        "Protects the exact two-field model contract with atomic writes and validation.": "Protege el contrato exacto de dos campos con escritura atomica y validacion.",
+        "Stores optional configuration, normalization metadata, and cost history separately.": "Guarda por separado la configuracion opcional, metadatos y el historial de coste.",
+        "Measures model quality without modifying Mandatory training.": "Mide la calidad del modelo sin modificar el entrenamiento Mandatory.",
+        "05 / explain the why": "05 / explica el porqué",
+        "Decisions worth remembering": "Decisiones que conviene recordar",
+        "These are the short answers to the questions most likely to come up in a review.": "Estas son las respuestas breves a las preguntas más probables en una revisión.",
+        "Why standardize mileage?": "¿Por qué estandarizar el kilometraje?",
+        "Raw mileages are large numbers. Standardization keeps gradient descent numerically stable, then the parameters are converted back before persistence.": "Los kilometrajes son números grandes. La estandarización mantiene estable el gradient descent y después los parámetros se reconvierten antes de persistirlos.",
+        "What does the public model store?": "¿Qué guarda el modelo público?",
+        "Only the original-scale parameters are persisted. Prediction does not need to know that training used normalization internally.": "Solo se persisten los parámetros en escala original. La predicción no necesita saber que el entrenamiento usó normalización.",
+        "Why MAE and MSE?": "¿Por qué MAE y MSE?",
+        "MAE is easy to interpret in price units. MSE penalizes large errors more heavily. Lower is better; zero is perfect.": "MAE es fácil de interpretar en unidades de precio. MSE penaliza más los errores grandes. Menor es mejor; cero es perfecto.",
+        "What does diagnostics measure?": "¿Qué diagnostica diagnostics?",
+        "It exposes the already-recorded training cost over time, plus configuration and normalization metadata. It does not change the gradient descent loop.": "Expone el coste de entrenamiento ya registrado, junto con la configuración y los metadatos de normalización. No cambia el bucle de gradient descent.",
+        "Why keep Bonus separate?": "¿Por qué mantener Bonus separado?",
+        "The Mandatory programs stay small and dependency-free. SVG, precision, and diagnostics consume the public model but never become requirements for training or prediction.": "Los programas Mandatory siguen siendo pequeños y sin dependencias. SVG, precision y diagnostics consumen el modelo público, pero nunca son requisitos para entrenar o predecir.",
+        "What is checked for invalid input?": "¿Qué se comprueba en las entradas inválidas?",
+        "Missing files, malformed CSV rows, non-numeric or non-finite values, invalid model JSON, zero mileage variance, and unstable training parameters are rejected explicitly.": "Se rechazan explícitamente ficheros ausentes, filas CSV incorrectas, valores no numéricos o no finitos, JSON inválido, varianza cero y parámetros inestables.",
+        "06 / finish strong": "06 / termina fuerte",
+        "Evaluation checklist": "Checklist de evaluación",
+        "Use this as a final mental checklist. The detailed command scripts live in the repository.": "Usa esto como checklist final. Los scripts detallados están en el repositorio.",
+        "Mandatory": "Mandatory",
+        "Bonus": "Bonus",
+        "Offline evaluation guide · Source of detail:": "Guía de evaluación offline · Detalle en:"
+      };
+
+      const languageButton = document.getElementById("language-toggle");
+      const originalText = new WeakMap();
+      let language = "en";
+
+      function setTextLanguage(nextLanguage) {
+        language = nextLanguage;
+        document.documentElement.lang = language;
+        document.querySelectorAll("[data-en][data-es]").forEach(function (element) {
+          element.textContent = language === "es" ? element.dataset.es : element.dataset.en;
+        });
+
+        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        let node;
+        while ((node = walker.nextNode())) {
+          const parent = node.parentElement;
+          if (!parent || parent.closest("script, style, code, pre, button, [data-en]")) continue;
+          let original = originalText.get(node);
+          if (original === undefined) {
+            original = node.nodeValue;
+            originalText.set(node, original);
+          }
+          const trimmed = original.trim();
+          const translated = translations[trimmed];
+          if (!translated) continue;
+          const start = original.indexOf(trimmed);
+          const end = start + trimmed.length;
+          node.nodeValue = language === "es"
+            ? original.slice(0, start) + translated + original.slice(end)
+            : original;
+        }
+        languageButton.textContent = language === "es" ? "EN / English" : "ES / Español";
+        languageButton.setAttribute("aria-label", language === "es" ? "Cambiar a ingles" : "Switch to Spanish");
+      }
+
+      languageButton.addEventListener("click", function () {
+        setTextLanguage(language === "en" ? "es" : "en");
+      });
+
+      const copyButtons = document.querySelectorAll("[data-copy]");
+      copyButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+          const original = button.textContent;
+          const text = button.getAttribute("data-copy");
+          const done = function () {
+            button.textContent = "Copied";
+            setTimeout(function () { button.textContent = original; }, 1200);
+          };
+          if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text).then(done);
+          } else {
+            const area = document.createElement("textarea");
+            area.value = text;
+            area.style.position = "fixed";
+            area.style.opacity = "0";
+            document.body.appendChild(area);
+            area.focus();
+            area.select();
+            document.execCommand("copy");
+            area.remove();
+            done();
+          }
+        });
+      });
+
+      function filterItems(inputId, selector) {
+        const input = document.getElementById(inputId);
+        const items = document.querySelectorAll(selector);
+        input.addEventListener("input", function () {
+          const query = input.value.trim().toLowerCase();
+          items.forEach(function (item) {
+            item.hidden = query && !(item.dataset.search || "").toLowerCase().includes(query);
+          });
+        });
+      }
+
+      filterItems("command-search", "#command-list .command-card");
+      filterItems("function-search", "#function-table tbody tr");
+
+      const links = document.querySelectorAll(".nav a");
+      const sections = document.querySelectorAll("main > section, main > header");
+      const observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            links.forEach(function (link) {
+              link.classList.toggle("active", link.getAttribute("href") === "#" + entry.target.id);
+            });
+          }
+        });
+      }, { rootMargin: "-20% 0px -65% 0px" });
+      sections.forEach(function (section) { observer.observe(section); });
+    }());
+  </script>
+</body>
+</html>
