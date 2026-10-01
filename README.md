@@ -59,6 +59,19 @@ python3 predict.py
 
 Use `--model PATH` to load a model from another location.
 
+## Bonus visualization
+
+The optional dataset plot uses only the Python standard library and writes an
+SVG file, so it works on the school clusters without `sudo`, `apt`, or `pip`:
+
+```bash
+python3 bonus/plot.py
+```
+
+The default output is `bonus/output/dataset.svg`. Open that file in a browser or
+any SVG-capable image viewer. Custom paths can be supplied with `--data` and
+`--output`.
+
 ## Constraints
 
 The regression algorithm must be implemented by us. Libraries that perform

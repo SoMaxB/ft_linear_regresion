@@ -61,3 +61,21 @@ Successful output has the form `Estimated price: VALUE` and exits with status
 message to standard error and exits with status `1`. A missing, unreadable, or
 invalid model is also an explicit error and never falls back to zero
 parameters.
+
+## Bonus dataset plot
+
+The first Bonus tool plots the `km,price` observations without adding an
+external dependency. It generates SVG directly with the Python standard
+library, which keeps it usable on clusters where installing packages is not
+available:
+
+```bash
+python3 bonus/plot.py
+```
+
+The default input is `data.csv` and the default output is
+`bonus/output/dataset.svg`. Both paths can be overridden:
+
+```bash
+python3 bonus/plot.py --data path/to/data.csv --output path/to/dataset.svg
+```
