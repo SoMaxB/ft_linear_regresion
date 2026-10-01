@@ -28,7 +28,7 @@ its acceptance criteria before the next dependent issue starts.
 
 - `#13` Plot the dataset (implemented).
 - `#14` Plot the regression line with the dataset (implemented).
-- `#15` Calculate model precision.
+- `#15` Calculate model precision (implemented).
 - `#16` Improve optional CLI and training diagnostics.
 
 Bonus issues are blocked by `#12`. The exact issue dependencies and acceptance

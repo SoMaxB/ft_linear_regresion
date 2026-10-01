@@ -81,6 +81,16 @@ python3 bonus/plot.py --model model/theta.json
 The model parameters are already stored on the original mileage scale, so the
 plot uses the public hypothesis directly and does not need normalization data.
 
+Measure model error with the optional precision tool:
+
+```bash
+python3 bonus/precision.py
+```
+
+It reports MAE, the average absolute error in price units, and MSE, the average
+squared error in squared price units. Lower values are better; neither metric
+is a percentage of correct predictions.
+
 ## Constraints
 
 The regression algorithm must be implemented by us. Libraries that perform

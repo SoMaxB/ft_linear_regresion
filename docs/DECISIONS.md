@@ -92,3 +92,18 @@ error-handling, integration, and subject-compliance checks.
 It rejects non-numeric and non-finite input, reports model-file failures on
 standard error, and exits with status `1`. It never substitutes zero parameters
 when `model/theta.json` is missing or invalid.
+
+## D-009: Bonus error metrics
+
+The Bonus precision tool reports Mean Absolute Error (MAE) and Mean Squared
+Error (MSE), rather than presenting regression quality as a percentage. MAE is
+the primary human-readable metric because it remains in the same units as the
+price. MSE is included because it penalizes large errors more strongly.
+
+```text
+MAE = 1 / m * sum(abs(estimatePrice(km) - price))
+MSE = 1 / m * sum((estimatePrice(km) - price)^2)
+```
+
+Both metrics use the persisted original-scale parameters and do not alter the
+Mandatory training algorithm. Lower values are better and zero is perfect.

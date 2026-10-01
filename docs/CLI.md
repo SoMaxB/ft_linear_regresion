@@ -105,3 +105,31 @@ estimatePrice(km) = theta0 + theta1 * km
 The SVG y-axis includes both observed prices and the line's endpoint
 predictions, ensuring that the regression line remains visible even when it
 falls outside the observed price range.
+
+## Bonus model precision
+
+The precision tool evaluates the persisted model against the same dataset:
+
+```bash
+python3 bonus/precision.py
+```
+
+Custom paths are supported:
+
+```bash
+python3 bonus/precision.py \
+  --data path/to/data.csv \
+  --model path/to/theta.json
+```
+
+It prints two regression error metrics:
+
+- **MAE** (Mean Absolute Error) is the average absolute difference between the
+  predicted and actual price. It uses the same units as `price`.
+- **MSE** (Mean Squared Error) is the average squared difference. It uses
+  squared price units and penalizes large errors more strongly.
+
+Both metrics are `0` for perfect predictions. Lower values indicate a better
+fit. They are error measurements, not classification accuracy percentages.
+The tool uses the persisted original-scale parameters and the public
+`estimatePrice(km)` hypothesis. It does not retrain or modify the model.
