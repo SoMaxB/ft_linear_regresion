@@ -1,10 +1,11 @@
-# Training CLI
+# Command-Line Applications
 
 Issue #8 connects the existing data, training, and persistence components in
-`train.py`. The command is intentionally an orchestrator; it does not contain
-the regression formulas or JSON serialization logic.
+`train.py`. Issue #9 adds the interactive prediction flow in `predict.py`.
+Both commands are intentionally orchestrators; they do not contain the
+regression formulas or JSON serialization logic.
 
-## Usage
+## Training
 
 From the repository root:
 
@@ -33,3 +34,30 @@ training prints the destination model path and exits with status `0`.
 
 Argument parsing remains handled by `argparse`, including its standard usage
 message for invalid command-line options.
+
+## Prediction
+
+From the repository root, after a model has been trained:
+
+```bash
+python3 predict.py
+```
+
+The command loads `model/theta.json`, asks for one mileage, and evaluates the
+public hypothesis using the original-scale parameters:
+
+```text
+estimatePrice(km) = theta0 + theta1 * km
+```
+
+The model path can be overridden:
+
+```bash
+python3 predict.py --model path/to/theta.json
+```
+
+Successful output has the form `Estimated price: VALUE` and exits with status
+`0`. The mileage must be numeric and finite; invalid input prints an `Error:`
+message to standard error and exits with status `1`. A missing, unreadable, or
+invalid model is also an explicit error and never falls back to zero
+parameters.

@@ -85,3 +85,10 @@ perform the complete regression or hide the specified gradient descent.
 
 Bonus work starts only after the complete Mandatory flow passes mathematical,
 error-handling, integration, and subject-compliance checks.
+
+## D-008: Interactive prediction errors
+
+`predict.py` prompts for one mileage and evaluates the original-scale model.
+It rejects non-numeric and non-finite input, reports model-file failures on
+standard error, and exits with status `1`. It never substitutes zero parameters
+when `model/theta.json` is missing or invalid.

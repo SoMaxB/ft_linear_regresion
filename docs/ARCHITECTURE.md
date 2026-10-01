@@ -31,7 +31,7 @@ src/data.py ----> src/regression.py ----> src/model_io.py
 │   └── validation.py
 ├── tests/
 │   ├── test_data.py
-│   ├── test_prediction.py
+│   ├── test_predict.py
 │   └── test_regression.py
 └── bonus/
     ├── plot.py
