@@ -2,6 +2,8 @@
 
 Implementation of the 42 `ft_linear_regression` project.
 
+🔗 Página publicada / Live site: https://somaxb.github.io/ft_linear_regresion/
+
 The project trains a simple linear regression with gradient descent to predict
 the price of a car from its mileage.
 
