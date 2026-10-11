@@ -15,7 +15,7 @@ src/data.py ----> src/regression.py ----> src/model_io.py
                                          predict.py
 ```
 
-## Planned tree
+## Project tree
 
 ```text
 .

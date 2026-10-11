@@ -11,7 +11,7 @@ The Mandatory implementation currently includes the linear hypothesis, one
 gradient descent step, the standardized training loop, JSON model persistence,
 and both command-line flows for training and prediction.
 
-## Planned interface
+## Interface
 
 ```text
 data.csv -> train.py -> model/theta.json -> predict.py
